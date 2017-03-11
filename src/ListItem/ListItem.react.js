@@ -43,8 +43,11 @@ const propTypes = {
 
     // right side
     rightElement: PropTypes.oneOfType([
-        PropTypes.element,
         PropTypes.string,
+        PropTypes.oneOfType([
+          PropTypes.element,
+          PropTypes.arrayOf(PropTypes.element)
+        ])
     ]),
     onRightElementPress: PropTypes.func,
 };
@@ -309,11 +312,14 @@ class ListItem extends PureComponent {
 
         let content = null;
         let elements = null;
+        let buttons = null
 
         if (typeof rightElement === 'string') {
             elements = [rightElement];
-        } else if (Array.isArray(rightElement)) {
+        } else if (Array.isArray(rightElement) && rightElement[0] === 'string') {
             elements = rightElement;
+        } else if (Array.isArray(rightElement)) {
+          buttons = rightElement 
         }
 
         const flattenRightElement = StyleSheet.flatten(styles.rightElement);
@@ -328,6 +334,16 @@ class ListItem extends PureComponent {
                     <Icon name={action} size={24} style={styles.rightElement} />
                 </IconToggle>
             ));
+        } else if (buttons) {
+          content = (
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+              {buttons.map((button, i) => (
+                <View key={i}>
+                  {button}
+                </View>
+              ))}
+            </View>
+          )
         } else {
             content = (
                 <TouchableWithoutFeedback onPress={this.onRightElementPressed}>
