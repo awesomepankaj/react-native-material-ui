@@ -21,6 +21,7 @@ const propTypes = {
     onPress: PropTypes.func,
     onPressValue: PropTypes.any,
     numberOfLines: React.PropTypes.oneOf([1, 2, 3, 'dynamic']),
+    primaryTextNumberOfLines: React.PropTypes.oneOf([1, 2, 3, 'dynamic']),
     style: PropTypes.object,
 
     // left side
@@ -278,7 +279,7 @@ class ListItem extends PureComponent {
                 <View style={styles.textViewContainer}>
                     <View style={styles.firstLine}>
                         <View style={styles.primaryTextContainer}>
-                            <Text numberOfLines={2} style={styles.primaryText}>
+                            <Text numberOfLines={this.props.primaryTextNumberOfLines || 1} style={styles.primaryText}>
                                 {primaryText}
                             </Text>
                         </View>
