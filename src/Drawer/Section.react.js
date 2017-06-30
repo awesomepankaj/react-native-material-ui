@@ -91,6 +91,7 @@ class Section extends PureComponent {
                                 leftElement={item.icon}
                                 centerElement={item.value}
                                 onPress={item.onPress}
+                                disabled={item.disabled}
                                 style={style}
                             />
                         );
