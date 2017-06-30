@@ -22,6 +22,7 @@ const propTypes = {
     onPressValue: PropTypes.any,
     numberOfLines: React.PropTypes.oneOf([1, 2, 3, 'dynamic']),
     primaryTextNumberOfLines: React.PropTypes.oneOf([1, 2, 3, 'dynamic']),
+    disabled: PropTypes.bool,
     style: PropTypes.object,
 
     // left side
@@ -106,7 +107,7 @@ function getListItemHeight(props, state) {
     return null;
 }
 function getStyles(props, context, state) {
-    const { rightElement } = props;
+    const { rightElement, disabled } = props;
     const { listItem } = context.uiTheme;
     const { numberOfLines } = state;
 
@@ -123,6 +124,10 @@ function getStyles(props, context, state) {
     }
     if (typeof rightElement !== 'string') {
         contentViewContainer.paddingRight = 16;
+    }
+
+    if (disabled) {
+      contentViewContainer.opacity = 0.5
     }
 
     return {
@@ -223,7 +228,7 @@ class ListItem extends PureComponent {
         }
     };
     renderLeftElement = (styles) => {
-        const { leftElement } = this.props;
+        const { leftElement, disabled } = this.props;
 
         if (!leftElement) {
             return null;
@@ -234,13 +239,13 @@ class ListItem extends PureComponent {
 
         if (typeof leftElement === 'string') {
             content = (
-                <TouchableWithoutFeedback onPress={this.onLeftElementPressed}>
+                <TouchableWithoutFeedback onPress={this.onLeftElementPressed} disabled={disabled}>
                     <Icon name={leftElement} color={flattenLeftElement.color} />
                 </TouchableWithoutFeedback>
             );
         } else {
             content = (
-                <TouchableWithoutFeedback onPress={this.onLeftElementPressed}>
+                <TouchableWithoutFeedback onPress={this.onLeftElementPressed} disabled={disabled}>
                     <View>
                         {leftElement}
                     </View>
@@ -320,7 +325,7 @@ class ListItem extends PureComponent {
         } else if (Array.isArray(rightElement) && rightElement[0] === 'string') {
             elements = rightElement;
         } else if (Array.isArray(rightElement)) {
-          buttons = rightElement 
+          buttons = rightElement
         }
 
         const flattenRightElement = StyleSheet.flatten(styles.rightElement);
@@ -378,7 +383,7 @@ class ListItem extends PureComponent {
         </View>
     )
     render() {
-        const { onPress } = this.props;
+        const { onPress, disabled } = this.props;
 
         const styles = getStyles(this.props, this.context, this.state);
 
@@ -387,7 +392,7 @@ class ListItem extends PureComponent {
 
         if (onPress) {
             content = (
-                <RippleFeedback delayPressIn={50} onPress={this.onListItemPressed}>
+                <RippleFeedback delayPressIn={50} onPress={this.onListItemPressed} disabled={disabled}>
                     {content}
                 </RippleFeedback>
             );
